@@ -1,0 +1,32 @@
+{
+  "name": "code-vortex-back-end",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Desain",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.5.0",
+    "body-parser": "^1.20.2",
+    "connect-redis": "^7.1.0",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "fetch-cookie": "^2.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "md5": "^2.3.0",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.6.1",
+    "nodemailer": "^6.9.5",
+    "random-string": "^0.2.0",
+    "redis": "^4.6.8",
+    "sequelize": "^6.33.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.6.0"
+  }
+}
