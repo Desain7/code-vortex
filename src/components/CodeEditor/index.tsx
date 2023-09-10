@@ -2,6 +2,7 @@ import React, { memo, useRef } from 'react'
 import type { FC, ReactNode } from 'react'
 import { Card } from 'antd'
 import { CloseOutlined } from '@ant-design/icons'
+import Draggable from 'react-draggable'
 // 引入
 import CodeMirror from '@uiw/react-codemirror'
 // 配置项
@@ -13,7 +14,7 @@ import CodeMirror from '@uiw/react-codemirror'
 import { javascript } from '@codemirror/lang-javascript'
 // 引入样式
 import '@uiw/codemirror-theme-github'
-import useDrag from '@/utils/useDrag'
+import { EditorWrapper } from './style'
 interface IProps {
   children?: ReactNode
 }
@@ -44,33 +45,29 @@ const CodeEditor: FC<IProps> = () => {
   const onChange = React.useCallback((value: any, viewUpdate: any) => {
     console.log('value:', value)
   }, [])
-  useDrag({
-    dragger: '.dragger',
-    margin: [10, 10, 10, 10]
-  })
   return (
-    <>
-      {' '}
-      <Card
-        title="代码编辑"
-        bordered={true}
-        className="dragger"
-        style={{ width: 300, padding: '0' }}
-        actions={[<div key={'save'}>保存</div>]}
-        extra={
-          <CloseOutlined
-            style={{ fontSize: '100%', color: '#9a9a9a', cursor: 'pointer' }}
+    <Draggable handle=".ant-card-head">
+      <EditorWrapper>
+        <Card
+          title="代码编辑"
+          bordered={true}
+          style={{ width: 300, padding: '0' }}
+          actions={[<div key={'save'}>保存</div>]}
+          extra={
+            <CloseOutlined
+              style={{ fontSize: '100%', color: '#9a9a9a', cursor: 'pointer' }}
+            />
+          }
+        >
+          <CodeMirror
+            value="console.log('hello world!');"
+            height="200px"
+            extensions={[javascript({ jsx: true })]}
+            onChange={onChange}
           />
-        }
-      >
-        <CodeMirror
-          value="console.log('hello world!');"
-          height="200px"
-          extensions={[javascript({ jsx: true })]}
-          onChange={onChange}
-        />
-      </Card>
-    </>
+        </Card>
+      </EditorWrapper>
+    </Draggable>
   )
 }
 

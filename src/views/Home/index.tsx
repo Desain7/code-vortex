@@ -3,9 +3,29 @@ import type { FC, ReactNode } from 'react'
 import { Outlet } from 'react-router-dom'
 import CodeEditor from '@/components/CodeEditor'
 import { HomeWrapper } from './style'
+import ItemCard from '@/components/ItemCard'
+import { Layout } from 'antd'
+import Sider from 'antd/es/layout/Sider'
+import { Content } from 'antd/es/layout/layout'
 
 interface IProps {
   children?: ReactNode
+}
+
+const contentStyle: React.CSSProperties = {
+  textAlign: 'center',
+  minHeight: 120,
+  lineHeight: '120px',
+  color: '#fff',
+  backgroundColor: '#108ee9',
+  padding: '2%'
+}
+
+const siderStyle: React.CSSProperties = {
+  textAlign: 'center',
+  lineHeight: '120px',
+  color: '#fff',
+  backgroundColor: '#3ba0e9'
 }
 
 const Home: FC<IProps> = () => {
@@ -13,11 +33,23 @@ const Home: FC<IProps> = () => {
     <HomeWrapper>
       {' '}
       <div className="home-container">
-        <CodeEditor></CodeEditor>
-        {/* 二级路由 */}
+        <Layout hasSider>
+          <Sider style={siderStyle} width={'25%'}>
+            Sider
+          </Sider>
+          <Content style={contentStyle}>
+            <ItemCard>666</ItemCard>
+            <ItemCard></ItemCard>
+            <ItemCard></ItemCard>
+            <ItemCard></ItemCard>
+            <ItemCard></ItemCard>
+          </Content>
+        </Layout>
+
+        {/* 二级路由
         <Suspense fallback="">
           <Outlet />
-        </Suspense>
+        </Suspense> */}
       </div>
     </HomeWrapper>
   )
