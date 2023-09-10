@@ -77,6 +77,7 @@ class ExpressServer {
           `Request start path = ${req.path}, clientIp = ${requestClientIp}, params = ${params}`
         )
         // 等待 handler 处理请求
+        console.log('han', handlerFunction)
         result = await handlerFunction(event, req, res)
         // 封装响应
         result = {
@@ -124,10 +125,11 @@ class ExpressServer {
     // 根据方法注册路由处理程序
     switch (method) {
       case 'post':
-        this.app.post(routeParams)
+        this.app.post(...routeParams)
         break
       case 'get':
-        this.app.get(routeParams)
+        this.app.get(...routeParams)
+        break
     }
   }
   /**

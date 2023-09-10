@@ -3,9 +3,9 @@
  */
 const routes = [
   {
-    path: '/user/register',
-    handler: {},
-    methods: 'get',
+    path: '/getCode',
+    handlerFunction: require('./controller/testController').getUserCode,
+    method: 'get',
     auth: false
   }
 ]
