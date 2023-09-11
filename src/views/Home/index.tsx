@@ -7,6 +7,7 @@ import ItemCard from '@/components/ItemCard'
 import { Layout } from 'antd'
 import Sider from 'antd/es/layout/Sider'
 import { Content } from 'antd/es/layout/layout'
+import CodeBlock from '@/components/CodeBlock'
 
 interface IProps {
   children?: ReactNode
@@ -33,19 +34,31 @@ const Home: FC<IProps> = () => {
     <HomeWrapper>
       {' '}
       <div className="home-container">
-        <Layout hasSider>
+        {/* <Layout hasSider>
           <Sider style={siderStyle} width={'25%'}>
             Sider
           </Sider>
-          <Content style={contentStyle}>
-            <ItemCard>666</ItemCard>
-            <ItemCard></ItemCard>
-            <ItemCard></ItemCard>
-            <ItemCard></ItemCard>
-            <ItemCard></ItemCard>
-          </Content>
-        </Layout>
-
+          <Content style={contentStyle}></Content>
+        </Layout> */}
+        <CodeBlock
+          code={`var searchBST = function(root, val) {
+            if(!root) {
+              return null
+            }
+            // 当前节点等于目标值，返回节点
+            if(root.val == val) {
+              return root
+            }
+            // 大于目标值，向左搜索子树
+            if(root.val > val) {
+              return searchBST(root.left, val)
+            }
+            // 小于目标值，向右搜索子树
+            if(root.val < val) {
+              return searchBST(root.right, val)
+            }
+          };`}
+        ></CodeBlock>
         {/* 二级路由
         <Suspense fallback="">
           <Outlet />
