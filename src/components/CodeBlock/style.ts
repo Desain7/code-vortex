@@ -1,10 +1,11 @@
 import styled from 'styled-components'
 
 export const CodeBlockWrapper = styled.div`
+  .code-content {
+    position: relative;
+  }
   .handle {
-    position: 'absolute';
-    top: 4;
-    right: 4;
-    line-height: '14px';
+    display: flex;
+    flex-direction: row-reverse;
   }
 `

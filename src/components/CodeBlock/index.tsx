@@ -7,10 +7,13 @@ import Clipboard from 'clipboard'
 import { Button, Card, Select } from 'antd'
 import { PictureOutlined } from '@ant-design/icons'
 import { FilterFunc } from 'rc-select/lib/Select'
+import { CodeBlockWrapper } from './style'
 
 interface IProps {
   children?: ReactNode
   code: string
+  width?: number
+  height?: number
 }
 
 /**
@@ -48,9 +51,10 @@ const codeOpts = {
   ]
 }
 
+// 缓存已加载过的主题
 const themeMap = new Map()
 
-const CodeBlock: FC<IProps> = ({ code }) => {
+const CodeBlock: FC<IProps> = ({ code, width = 500, height = 300 }) => {
   const [language, setLanguage] = useState('')
   const [theme, setTheme] = useState('github')
 
@@ -82,7 +86,7 @@ const CodeBlock: FC<IProps> = ({ code }) => {
     const loadTheme = async () => {
       const themeFileName = `${theme}.css`
       try {
-        // 移除上一次添加的样式
+        // 移除上一次导入的样式内容
         const preStyleTags = document.head.getElementsByTagName('style')
         const preLastStyleTag = preStyleTags[preStyleTags.length - 1]
         // console.log(lastStyleTag.textContent)
@@ -90,17 +94,20 @@ const CodeBlock: FC<IProps> = ({ code }) => {
           preLastStyleTag.textContent = ''
           console.log('removed!')
         }
+        // 判断是否导入过该主题，若已导入则直接从 map 中拿取缓存的数据
         if (themeMap.has(theme)) {
           console.log('have', themeMap.get(theme))
           preLastStyleTag.textContent = themeMap.get(theme)
         } else {
+          // 使用动态导入加载样式文件
           await import(
             `../../../node_modules/highlight.js/styles/${themeFileName}`
           )
         }
-        // 使用动态导入加载样式文件
+        // 导入样式文件后会在 head 末尾生成一个新的 style 标签，所以需要重新获取
         const curStyleTags = document.head.getElementsByTagName('style')
         const curLastStyleTag = curStyleTags[curStyleTags.length - 1]
+        // 缓存导入的样式文件中的内容
         if (curLastStyleTag.textContent?.includes('code')) {
           themeMap.set(theme, curLastStyleTag.textContent)
           console.log('con', curLastStyleTag.textContent)
@@ -145,66 +152,77 @@ const CodeBlock: FC<IProps> = ({ code }) => {
   return (
     <div>
       {/* 代码块卡片 */}
-      <div id="code-container">
-        <Card>
-          <div
-            className="code-block"
-            style={{ position: 'relative', marginTop: 8 }}
-          >
-            <div className="code-options">
-              <Select
-                value={language}
-                showSearch
-                style={{ width: 120 }}
-                options={codeOpts.languageOpts}
-                onChange={(value) => setLanguage(value)}
-                filterOption={filterOption}
-              />
-              <Select
-                value={theme}
-                showSearch
-                style={{ width: 120 }}
-                options={codeOpts.themeOpts}
-                onChange={(value) => setTheme(value)}
-                filterOption={filterOption}
-              />
-            </div>
-
-            <div className="code-content">
-              <pre>
-                <code
-                  id={language}
-                  ref={preRef}
-                  className={`hljs language-${language} theme-${theme}`}
-                >
-                  {code}
-                </code>
-              </pre>
-            </div>
-
-            <Button
-              id={`${language}copy_btn`}
-              style={{
-                position: 'absolute',
-                top: 4,
-                right: 4,
-                lineHeight: '14px'
-              }}
-              type="link"
-              className="code-block__button"
-              data-clipboard-target={`#${language}`}
-              disabled={!preRef.current}
+      <CodeBlockWrapper>
+        {' '}
+        <div id="code-container" style={{ width: width, height: height }}>
+          <Card>
+            <div
+              className="code-block"
+              style={{ position: 'relative', marginTop: 8 }}
             >
-              {copied ? '已复制' : '复制'}
-            </Button>
-            <div className="handle"></div>
-            <Button
-              icon={<PictureOutlined />}
-              onClick={handleConvertToImage}
-            ></Button>
-          </div>
-        </Card>
-      </div>
+              <div className="code-options">
+                <Select
+                  value={language}
+                  showSearch
+                  style={{ width: 120 }}
+                  options={codeOpts.languageOpts}
+                  onChange={(value) => setLanguage(value)}
+                  filterOption={filterOption}
+                />
+                <Select
+                  value={theme}
+                  showSearch
+                  style={{ width: 120 }}
+                  options={codeOpts.themeOpts}
+                  onChange={(value) => setTheme(value)}
+                  filterOption={filterOption}
+                />
+              </div>
+
+              <div className="code-content">
+                <pre>
+                  <code
+                    id={language}
+                    ref={preRef}
+                    className={`hljs language-${language} theme-${theme}`}
+                  >
+                    {code}
+                  </code>
+                </pre>
+                <div
+                  className="code-lang"
+                  style={{
+                    display: 'inline',
+                    position: 'absolute',
+                    top: '1em',
+                    right: '1em',
+                    lineHeight: '14px'
+                  }}
+                >
+                  {language.toUpperCase()}
+                </div>
+              </div>
+
+              <div className="handle">
+                <Button
+                  id={`${language}copy_btn`}
+                  type="link"
+                  className="code-block__button"
+                  data-clipboard-target={`#${language}`}
+                  disabled={!preRef.current}
+                >
+                  {copied ? '已复制' : '复制'}
+                </Button>
+                <Button
+                  type="link"
+                  icon={<PictureOutlined />}
+                  onClick={handleConvertToImage}
+                ></Button>
+              </div>
+            </div>
+          </Card>
+        </div>
+      </CodeBlockWrapper>
     </div>
   )
 }
