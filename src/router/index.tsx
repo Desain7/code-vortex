@@ -1,5 +1,6 @@
 import { RouteObject, Navigate } from 'react-router-dom'
 import React, { lazy } from 'react'
+import LoginRegister from '@/views/Login&Register'
 
 // 配置路由懒加载
 const Home = lazy(() => import('@/views/Home'))
@@ -16,12 +17,16 @@ const routes: RouteObject[] = [
     element: <Home />
   },
   {
-    path: '/codeLisb',
+    path: '/codeLib',
     element: <CodeLib />
   },
   {
     path: '/chat',
     element: <Chat />
+  },
+  {
+    path: '/login',
+    element: <LoginRegister />
   }
 ]
 

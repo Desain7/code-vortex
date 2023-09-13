@@ -1,5 +1,5 @@
 // service 配置文件
-export const BASE_URL = 'http://localhost:6060'
+export const BASE_URL = 'http://localhost:7345/api'
 export const TIME_OUT = 10000
 
 if (process.env.NODE_ENV == 'development') {

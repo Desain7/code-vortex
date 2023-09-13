@@ -40,8 +40,9 @@ const Home: FC<IProps> = () => {
           </Sider>
           <Content style={contentStyle}></Content>
         </Layout> */}
-        <CodeBlock
-          code={`var searchBST = function(root, val) {
+        <ItemCard>
+          <CodeBlock
+            code={`var searchBST = function(root, val) {
             if(!root) {
               return null
             }
@@ -58,7 +59,9 @@ const Home: FC<IProps> = () => {
               return searchBST(root.right, val)
             }
           };`}
-        ></CodeBlock>
+          ></CodeBlock>
+        </ItemCard>
+
         {/* 二级路由
         <Suspense fallback="">
           <Outlet />

@@ -77,7 +77,10 @@ const Navigator: FC<IProps> = () => {
             placeholder=""
             prefix={<SearchOutlined />}
           />
-          <span className="login">登录</span>
+          <span className="login">
+            {' '}
+            <NavLink to={'/login'}>登录</NavLink>
+          </span>
         </HeaderRight>
       </div>
       <div className="divider"></div>

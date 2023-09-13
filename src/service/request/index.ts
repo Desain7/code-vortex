@@ -1,6 +1,14 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import axios from 'axios'
 import type { AxiosInstance } from 'axios'
 import type { MyRequestConfig } from './type'
+
+import NProgress from 'nprogress' // 导入 nprogress模块
+
+import 'nprogress/nprogress.css' // 导入样式，否则看不到效果
+
+NProgress.configure({ showSpinner: false }) // 显示右上角螺旋加载提示
 
 // 拦截器: 蒙版Loading/token/修改配置
 
@@ -24,7 +32,8 @@ class MyRequest {
     // 每个instance实例都添加拦截器
     this.instance.interceptors.request.use(
       (config) => {
-        // loading/token
+        // 展示 loading 进度条
+        NProgress.start()
         return config
       },
       (err) => {
@@ -33,6 +42,8 @@ class MyRequest {
     )
     this.instance.interceptors.response.use(
       (res) => {
+        // 隐藏
+        NProgress.done()
         return res.data
       },
       (err) => {

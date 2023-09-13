@@ -13,7 +13,6 @@ interface IProps {
   children?: ReactNode
   code: string
   width?: number
-  height?: number
 }
 
 /**
@@ -54,7 +53,7 @@ const codeOpts = {
 // 缓存已加载过的主题
 const themeMap = new Map()
 
-const CodeBlock: FC<IProps> = ({ code, width = 500, height = 300 }) => {
+const CodeBlock: FC<IProps> = ({ code, width = 500 }) => {
   const [language, setLanguage] = useState('')
   const [theme, setTheme] = useState('github')
 
@@ -154,21 +153,23 @@ const CodeBlock: FC<IProps> = ({ code, width = 500, height = 300 }) => {
       {/* 代码块卡片 */}
       <CodeBlockWrapper>
         {' '}
-        <div id="code-container" style={{ width: width, height: height }}>
+        <div id="code-container" style={{ width: width }}>
           <Card>
             <div
               className="code-block"
               style={{ position: 'relative', marginTop: 8 }}
             >
               <div className="code-options">
-                <Select
+                {/* 语言选项 */}
+                {/* <Select
                   value={language}
                   showSearch
                   style={{ width: 120 }}
                   options={codeOpts.languageOpts}
                   onChange={(value) => setLanguage(value)}
                   filterOption={filterOption}
-                />
+                /> */}
+                {/* 主题选项 */}
                 <Select
                   value={theme}
                   showSearch
