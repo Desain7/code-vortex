@@ -79,6 +79,7 @@ async function userLogin(username, password, req) {
     throw new MyError(NOT_FOUND_ERROR_CODE, '用户不存在或密码错误')
   }
   const payload = { id: user.id }
+  // 盐
   const secret = 'Desain'
   const options = { expiresIn: '7d' } // 过期时间
 

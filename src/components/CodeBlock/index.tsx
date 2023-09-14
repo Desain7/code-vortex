@@ -89,7 +89,7 @@ const CodeBlock: FC<IProps> = ({ code, width = 500 }) => {
         const preStyleTags = document.head.getElementsByTagName('style')
         const preLastStyleTag = preStyleTags[preStyleTags.length - 1]
         // console.log(lastStyleTag.textContent)
-        if (preLastStyleTag.textContent?.includes('code')) {
+        if (preLastStyleTag.textContent?.includes('code.hljs')) {
           preLastStyleTag.textContent = ''
           console.log('removed!')
         }

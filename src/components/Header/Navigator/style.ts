@@ -23,7 +23,7 @@ export const HeaderLeft = styled.div`
   .logo {
     display: block;
     width: 176px;
-    height: 70px;
+    height: 75px;
     background-position: 0 0;
     text-indent: -9999px;
   }
