@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import type { FC, ReactNode } from 'react'
 import CommonForm from '@/components/FormComp'
-import { Button, Checkbox, Form, Input, Card, message, Tabs } from 'antd'
+import { Button, Checkbox, Form, Input, Card, Tabs } from 'antd'
 import { UserWrapper } from './style'
 import { userLogin, userRegister } from '@/api/user'
 import { useAppDispatch } from '@/store'
