@@ -8,18 +8,34 @@ import 'normalize.css'
 import './assets/css/index.less'
 
 import store from './store'
-import theme from './assets/theme'
+import { theme, antdTheme } from './assets/theme'
 import App from '@/App'
+import { ConfigProvider } from 'antd'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   // Redux 提供全局状态
   <Provider store={store}>
-    {/* 全局主题 */}
-    <ThemeProvider theme={theme}>
-      <HashRouter>
-        <App />
-      </HashRouter>
-    </ThemeProvider>
+    <ConfigProvider
+      theme={{
+        // 全局 token
+        token: {
+          colorPrimary: '#84adea'
+        },
+        // 组件 token
+        components: {
+          Tabs: {
+            inkBarColor: '#cbdcf7'
+          }
+        }
+      }}
+    >
+      {/* 全局主题 */}
+      <ThemeProvider theme={theme}>
+        <HashRouter>
+          <App />
+        </HashRouter>
+      </ThemeProvider>
+    </ConfigProvider>
   </Provider>
 )

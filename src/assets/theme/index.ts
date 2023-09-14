@@ -1,6 +1,6 @@
 // 全局主题样式
 
-const theme = {
+export const theme = {
   color: {
     primary: '#C20C0C',
     secondary: ''
@@ -19,4 +19,4 @@ const theme = {
   }
 }
 
-export default theme
+export const antdTheme = {}
