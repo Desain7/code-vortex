@@ -2,26 +2,34 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { test } from '@/api/demo'
 import { message } from 'antd'
 
-// 推荐模块的初始状态
+interface Message {
+  text: string
+  type: 'success' | 'error' | 'info' | 'warning'
+}
 interface ISystemState {
-  message: string
+  message: Message
 }
 
 const initialState: ISystemState = {
-  message: ''
+  message: { text: '', type: 'error' }
 }
 
-// 创建推荐模块的slice
 const systemSlice = createSlice({
   name: 'system',
   initialState,
   reducers: {
     // 定义各个同步action对状态的修改逻辑
     changeMessageAction(state, { payload }) {
-      if (state.message == payload) {
-        state.message = ''
+      if (state.message.text == payload.text) {
+        state.message.text = ''
       } else {
-        state.message = payload
+        if (payload.type) {
+          state.message.type = payload.type
+          state.message.text = payload.text
+        } else {
+          state.message.type = 'error'
+          state.message.text = payload.text
+        }
       }
     }
   }

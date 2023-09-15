@@ -92,7 +92,21 @@ async function userLogin(username, password, req) {
   }
 }
 
+async function getLoginUser(req) {
+  let user = await UserModel.findOne({
+    attributes: { exclude: ['password'] },
+    where: {
+      id: req.userId
+    }
+  })
+  console.log('user', user)
+  return {
+    user: user
+  }
+}
+
 module.exports = {
   userRegister,
-  userLogin
+  userLogin,
+  getLoginUser
 }

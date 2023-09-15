@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React, { memo, useState } from 'react'
 import type { FC, ReactNode } from 'react'
 import CommonForm from '@/components/FormComp'
 import { Button, Checkbox, Form, Input, Card, Tabs } from 'antd'
@@ -6,11 +6,12 @@ import { UserWrapper } from './style'
 import { userLogin, userRegister } from '@/api/user'
 import { useAppDispatch } from '@/store'
 import { changeMessageAction } from '@/store/modules/system'
-
+import { changeUserConfigAction, userLoginAction } from '@/store/modules/user'
+import { useNavigate } from 'react-router-dom'
 type FieldType = {
   username?: string
   password?: string
-  remember?: string
+  remember?: string // remember 为 true 时，使用 local Storage，为 false 时，使用 sessionStorage
   email?: string
 }
 
@@ -19,22 +20,40 @@ interface IProps {
 }
 
 const LoginRegister: FC<IProps> = () => {
+  const navigate = useNavigate()
   const dispatch = useAppDispatch()
+  const [activeTab, setActiveTab] = useState('2')
 
   const register = async (values: any) => {
-    console.log('Success:', values)
     const res = await userRegister(values)
     if (res.message) {
       dispatch(changeMessageAction(res.message))
       console.log(res.message)
     }
+    if (res.code === 10200) {
+      dispatch(changeMessageAction({ text: '注册成功', type: 'success' }))
+      setActiveTab('2')
+    }
   }
+
   const login = async (values: any) => {
-    console.log('Success:', values)
     const res = await userLogin(values)
     if (res.message) {
-      dispatch(changeMessageAction(res.message))
+      dispatch(changeMessageAction({ text: res.message }))
       console.log(res.message)
+    }
+    if (res.code === 10200) {
+      console.log(123123)
+      const { user, token } = res.data
+      dispatch(changeMessageAction({ text: '登陆成功', type: 'success' }))
+      dispatch(changeUserConfigAction(user))
+      dispatch(
+        userLoginAction({
+          token: token,
+          remember: values.remember
+        })
+      )
+      navigate('/home', { replace: true })
     }
   }
 
@@ -48,7 +67,9 @@ const LoginRegister: FC<IProps> = () => {
         <Card>
           <Tabs
             defaultActiveKey="2"
+            activeKey={activeTab}
             centered
+            onTabClick={(key) => setActiveTab(key)}
             items={[
               {
                 label: '注册',

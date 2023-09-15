@@ -18,3 +18,6 @@ export function userLogin(user: UserConfig) {
     data: user
   })
 }
+export function getUserConfig() {
+  return myRequest.get({ url: '/getUser' })
+}

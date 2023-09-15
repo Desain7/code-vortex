@@ -1,9 +1,11 @@
-import React, { memo } from 'react'
+import React, { memo, useEffect } from 'react'
 import type { FC, ReactNode } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Input } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
 import { HeaderLeft, HeaderRight, HeaderWrapper } from './style'
+import { useAppSelector } from '@/store'
+import { shallowEqual } from 'react-redux'
 
 interface IProps {
   children?: ReactNode
@@ -28,6 +30,19 @@ const navItems = [
 ]
 
 const Navigator: FC<IProps> = () => {
+  const { userConfig, login } = useAppSelector(
+    (state) => ({
+      userConfig: state.user.userConfig,
+      login: state.user.login
+    }),
+    shallowEqual
+  )
+
+  // useEffect(() => {
+  //   // 监听到了 message 的变化后，发送
+
+  //   }
+  // }, [userConfig])
   /** 定义组件内部的状态 */
   // const [currentIndex, setCurrentIndex] = useState(0)
 
@@ -77,9 +92,13 @@ const Navigator: FC<IProps> = () => {
             placeholder=""
             prefix={<SearchOutlined />}
           />
+
           <span className="login">
-            {' '}
-            <NavLink to={'/login'}>登录</NavLink>
+            {login ? (
+              <div>{userConfig?.username}</div>
+            ) : (
+              <NavLink to={'/login'}>登录</NavLink>
+            )}
           </span>
         </HeaderRight>
       </div>

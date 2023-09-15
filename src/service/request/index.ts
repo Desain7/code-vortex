@@ -34,6 +34,10 @@ class MyRequest {
       (config) => {
         // 展示 loading 进度条
         NProgress.start()
+        const token =
+          localStorage.getItem('codevortex-token') ||
+          sessionStorage.getItem('codevortex-token')
+        config.headers.Authorization = token
         return config
       },
       (err) => {
@@ -47,6 +51,7 @@ class MyRequest {
         return res.data
       },
       (err) => {
+        NProgress.done()
         return err
       }
     )

@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
+    "@babel/standalone": "^7.22.19",
     "@codemirror/lang-cpp": "^6.0.2",
     "@codemirror/lang-html": "^6.4.6",
     "@codemirror/lang-java": "^6.0.1",
@@ -33,6 +34,7 @@
     "@uiw/react-codemirror": "^4.21.13",
     "antd": "^5.8.6",
     "axios": "^1.5.0",
+    "babel-standalone": "^6.26.0",
     "classnames": "^2.3.2",
     "clipboard": "^2.0.11",
     "craco-less": "^3.0.1",

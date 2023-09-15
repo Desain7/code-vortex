@@ -1,4 +1,4 @@
-import React, { memo, useRef } from 'react'
+import React, { memo, useRef, useState } from 'react'
 import type { FC, ReactNode } from 'react'
 import { Card } from 'antd'
 import { CloseOutlined } from '@ant-design/icons'
@@ -10,6 +10,10 @@ import CodeMirror from '@uiw/react-codemirror'
 // import 'codemirror/addon/display/autorefresh'
 // import 'codemirror/addon/comment/comment'
 // import 'codemirror/addon/edit/matchbrackets'
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-ignore
+import { transform } from '@babel/standalone'
 
 import { javascript } from '@codemirror/lang-javascript'
 // 引入样式
@@ -39,11 +43,21 @@ const options = {
   //... 具体可以参考文档
 }
 
-const snippet = `123`
-
 const CodeEditor: FC<IProps> = () => {
+  const [code, setCode] = useState('')
+  const [output, setOutput] = useState('')
+  const runCode = () => {
+    try {
+      const compliedCode = transform(code, { presets: ['env'] }).code
+      const result = eval(compliedCode)
+      console.log('result', result, code)
+      setOutput(result)
+    } catch (error) {
+      setOutput(`Error: ${error}`)
+    }
+  }
   const onChange = React.useCallback((value: any, viewUpdate: any) => {
-    console.log('value:', value)
+    setCode(value)
   }, [])
   return (
     <Draggable handle=".ant-card-head">
@@ -51,8 +65,13 @@ const CodeEditor: FC<IProps> = () => {
         <Card
           title="代码编辑"
           bordered={true}
-          style={{ width: 300, padding: '0' }}
-          actions={[<div key={'save'}>保存</div>]}
+          style={{ width: 500, padding: '0' }}
+          actions={[
+            <div key={'save'}>保存</div>,
+            <div key={'run'} onClick={runCode}>
+              运行
+            </div>
+          ]}
           extra={
             <CloseOutlined
               style={{ fontSize: '100%', color: '#9a9a9a', cursor: 'pointer' }}
@@ -60,11 +79,12 @@ const CodeEditor: FC<IProps> = () => {
           }
         >
           <CodeMirror
-            value="console.log('hello world!');"
+            value={code}
             height="200px"
             extensions={[javascript({ jsx: true })]}
             onChange={onChange}
           />
+          <div>{output}</div>
         </Card>
       </EditorWrapper>
     </Draggable>

@@ -7,8 +7,11 @@ import { useAppDispatch, useAppSelector } from './store'
 import { LoadingOutlined } from '@ant-design/icons'
 import { message } from 'antd'
 import { shallowEqual, useSelector } from 'react-redux'
+import { getToken } from './utils/userConfig'
+import { fetchUserConfigAction } from './store/modules/user'
 
 function App() {
+  const dispatch = useAppDispatch()
   const { getMessage } = useAppSelector(
     (state) => ({
       getMessage: state.system.message
@@ -18,11 +21,16 @@ function App() {
 
   useEffect(() => {
     // 监听到了 message 的变化后，发送
-    if (getMessage) {
-      message.error(getMessage)
+    if (getMessage.text) {
+      message[getMessage.type](getMessage.text)
       console.log('message', getMessage)
     }
   }, [getMessage])
+  getToken()
+
+  useEffect(() => {
+    dispatch(fetchUserConfigAction())
+  }, [])
 
   return (
     <div className="App">

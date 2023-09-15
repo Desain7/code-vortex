@@ -19,6 +19,12 @@ const routes = [
     handlerFunction: require('./controller/userController').userLoginApi,
     method: 'post',
     auth: false
+  },
+  {
+    path: '/getUser',
+    handlerFunction: require('./controller/userController').getUserConfigApi,
+    method: 'get',
+    auth: true
   }
 ]
 

@@ -117,11 +117,12 @@ class ExpressServer {
       res.send(result)
     }
     // 注册路由
-    let routeParams = [this.contextPath + path, handler]
+    let routeParams = [this.contextPath + path]
     // 是否开启身份验证
     if (auth) {
       routeParams.push(verifyToken)
     }
+    routeParams.push(handler)
     // 根据方法注册路由处理程序
     switch (method) {
       case 'post':
