@@ -209,7 +209,7 @@ const CodeBlock: FC<IProps> = ({ code, width = 500 }) => {
                   id={`${language}copy_btn`}
                   type="link"
                   className="code-block__button"
-                  data-clipboard-target={`#${language}`}
+                  data-clipboard-target={`${language}`}
                   disabled={!preRef.current}
                 >
                   {copied ? '已复制' : '复制'}
