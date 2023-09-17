@@ -32,11 +32,18 @@ const CodeModel = sequelize.define(
     },
     used: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     view: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
+    },
+    update_time: {
+      type: DataTypes.DATE
+    },
+    create_time: {
+      type: DataTypes.DATE,
+      allowNull: true
     }
   },
   {

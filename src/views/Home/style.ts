@@ -5,5 +5,6 @@ export const HomeWrapper = styled.div`
     height: 100vh;
     width: 80%;
     margin: 0 auto;
+    padding: 2px;
   }
 `

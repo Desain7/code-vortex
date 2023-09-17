@@ -14,6 +14,7 @@ export const HeaderWrapper = styled.div`
   .divider {
     height: 2px;
     background-color: #cbdcf7;
+    z-index: 999;
   }
 `
 

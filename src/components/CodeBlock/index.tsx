@@ -4,14 +4,24 @@ import * as htmlToImage from 'html-to-image'
 import hljs from '@/utils/highlight'
 import Clipboard from 'clipboard'
 
-import { Button, Card, Select } from 'antd'
-import { PictureOutlined } from '@ant-design/icons'
+import { Button, Card, Select, Image, Space } from 'antd'
+import {
+  DownloadOutlined,
+  PictureOutlined,
+  RotateLeftOutlined,
+  RotateRightOutlined,
+  SwapOutlined,
+  ZoomInOutlined,
+  ZoomOutOutlined
+} from '@ant-design/icons'
 import { FilterFunc } from 'rc-select/lib/Select'
 import { CodeBlockWrapper } from './style'
 
 interface IProps {
   children?: ReactNode
   code: string
+  language: string
+  id: string // 代码id
   width?: number
 }
 
@@ -53,9 +63,11 @@ const codeOpts = {
 // 缓存已加载过的主题
 const themeMap = new Map()
 
-const CodeBlock: FC<IProps> = ({ code, width = 500 }) => {
-  const [language, setLanguage] = useState('')
+const CodeBlock: FC<IProps> = ({ code, language, width = '100%', id }) => {
   const [theme, setTheme] = useState('github')
+  const [imgUrl, setImgUrl] = useState('')
+
+  const [previewVisible, setPreviewVisible] = useState(false)
 
   // 监听 language 内容的变化，更新 clipboard 实例
   useEffect(() => {
@@ -131,17 +143,35 @@ const CodeBlock: FC<IProps> = ({ code, width = 500 }) => {
 
   // 将代码块转换为图片
   const handleConvertToImage = () => {
-    const codeContainer = document.querySelector('.code-content') as HTMLElement
+    const codeContainer = document.querySelector(
+      `.code-content-${id}`
+    ) as HTMLElement
 
     htmlToImage
       .toPng(codeContainer)
       .then(function (dataUrl) {
-        const img = new Image()
-        img.src = dataUrl
-        document.body.appendChild(img)
+        setImgUrl(dataUrl)
+        setPreviewVisible(true)
       })
       .catch(function (error: Error) {
         console.error('Error converting code to image:', error)
+      })
+  }
+  /**
+   * 下载图片
+   */
+  const onDownload = () => {
+    fetch(imgUrl)
+      .then((response) => response.blob())
+      .then((blob) => {
+        const url = URL.createObjectURL(new Blob([blob]))
+        const link = document.createElement('a')
+        link.href = url
+        link.download = 'image.png'
+        document.body.appendChild(link)
+        link.click()
+        URL.revokeObjectURL(url)
+        link.remove()
       })
   }
 
@@ -180,10 +210,10 @@ const CodeBlock: FC<IProps> = ({ code, width = 500 }) => {
                 />
               </div>
 
-              <div className="code-content">
+              <div className={`code-content-${id}`}>
                 <pre>
                   <code
-                    id={language}
+                    id={`${language}-${id}`}
                     ref={preRef}
                     className={`hljs language-${language} theme-${theme}`}
                   >
@@ -195,21 +225,63 @@ const CodeBlock: FC<IProps> = ({ code, width = 500 }) => {
                   style={{
                     display: 'inline',
                     position: 'absolute',
-                    top: '1em',
-                    right: '1em',
-                    lineHeight: '14px'
+                    top: '1.6em',
+                    right: '0.1em',
+                    lineHeight: '14px',
+                    color: '#b9b9b9',
+                    fontSize: '0.5em'
                   }}
                 >
                   {language.toUpperCase()}
                 </div>
               </div>
-
+              <Image
+                style={{ display: 'none' }}
+                src={imgUrl}
+                preview={{
+                  visible: previewVisible,
+                  src: imgUrl,
+                  onVisibleChange: (value) => {
+                    setPreviewVisible(value)
+                  },
+                  toolbarRender: (
+                    _,
+                    {
+                      transform: { scale },
+                      actions: {
+                        onFlipY,
+                        onFlipX,
+                        onRotateLeft,
+                        onRotateRight,
+                        onZoomOut,
+                        onZoomIn
+                      }
+                    }
+                  ) => (
+                    <Space size={30} className="toolbar-wrapper">
+                      <DownloadOutlined onClick={onDownload} />
+                      <SwapOutlined rotate={90} onClick={onFlipY} />
+                      <SwapOutlined onClick={onFlipX} />
+                      <RotateLeftOutlined onClick={onRotateLeft} />
+                      <RotateRightOutlined onClick={onRotateRight} />
+                      <ZoomOutOutlined
+                        disabled={scale === 1}
+                        onClick={onZoomOut}
+                      />
+                      <ZoomInOutlined
+                        disabled={scale === 50}
+                        onClick={onZoomIn}
+                      />
+                    </Space>
+                  )
+                }}
+              />
               <div className="handle">
                 <Button
                   id={`${language}copy_btn`}
                   type="link"
                   className="code-block__button"
-                  data-clipboard-target={`${language}`}
+                  data-clipboard-target={`${language}-${id}`}
                   disabled={!preRef.current}
                 >
                   {copied ? '已复制' : '复制'}

@@ -6,13 +6,11 @@ import {
   shallowEqual
 } from 'react-redux'
 
-import demoReducer from './modules/demo'
 import systemSlice from './modules/system'
 import userSlice from './modules/user'
 // 创建Redux store
 const store = configureStore({
   reducer: {
-    demo: demoReducer, // 测试用的 reducer
     system: systemSlice, // 系统全局 reducer
     user: userSlice // 用户信息 reducer
   }

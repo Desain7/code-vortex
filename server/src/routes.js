@@ -3,12 +3,6 @@
  */
 const routes = [
   {
-    path: '/getCode',
-    handlerFunction: require('./controller/codeController').getUserCode,
-    method: 'get',
-    auth: false
-  },
-  {
     path: '/register',
     handlerFunction: require('./controller/userController').userRegisterApi,
     method: 'post',
@@ -24,6 +18,18 @@ const routes = [
     path: '/getUser',
     handlerFunction: require('./controller/userController').getUserConfigApi,
     method: 'get',
+    auth: true
+  },
+  {
+    path: '/code/get',
+    handlerFunction: require('./controller/codeController').getUserCode,
+    method: 'get',
+    auth: false
+  },
+  {
+    path: '/code/add',
+    handlerFunction: require('./controller/codeController').addUserCode,
+    method: 'post',
     auth: true
   }
 ]

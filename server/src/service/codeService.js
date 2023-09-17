@@ -9,17 +9,32 @@ const {
 const CodeModel = require('../model/code')
 
 async function getCode(req, name) {
-  // 获取当前用户的代码片段
+  // 条件查询代码片段
   const snippetList = await CodeModel.findAll({
     where: {
       language: {
-        [Op.like]: `%${name}%`
+        [Op.like]: `%${name ?? ''}%`
       }
     }
   })
   return snippetList
 }
 
+async function addCode(req, code, name, language, user) {
+  const date = new Date()
+  const data = await CodeModel.create({
+    name,
+    content: code,
+    language,
+    createTime: date.getTime(),
+    user_id: user,
+    used: 0,
+    view: 0
+  })
+  return { message: '添加成功', data }
+}
+
 module.exports = {
-  getCode
+  getCode,
+  addCode
 }

@@ -1,6 +1,4 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { test } from '@/api/demo'
-import { message } from 'antd'
 
 interface Message {
   text: string

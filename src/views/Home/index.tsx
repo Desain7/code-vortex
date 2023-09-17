@@ -1,4 +1,4 @@
-import React, { memo, Suspense } from 'react'
+import React, { memo, Suspense, useEffect, useState } from 'react'
 import type { FC, ReactNode } from 'react'
 import { Outlet } from 'react-router-dom'
 import CodeEditor from '@/components/CodeEditor'
@@ -8,59 +8,63 @@ import { Layout } from 'antd'
 import Sider from 'antd/es/layout/Sider'
 import { Content } from 'antd/es/layout/layout'
 import CodeBlock from '@/components/CodeBlock'
+import { getAllCode } from '@/api/code'
 
 interface IProps {
   children?: ReactNode
 }
 
 const contentStyle: React.CSSProperties = {
-  textAlign: 'center',
   minHeight: 120,
   lineHeight: '120px',
   color: '#fff',
-  backgroundColor: '#108ee9',
+  // backgroundColor: '#108ee9',
   padding: '2%'
 }
 
 const siderStyle: React.CSSProperties = {
-  textAlign: 'center',
   lineHeight: '120px',
-  color: '#fff',
-  backgroundColor: '#3ba0e9'
+  color: '#fff'
+  // backgroundColor: '#3ba0e9'
 }
 
 const Home: FC<IProps> = () => {
+  const [codeList, setCodeList] = useState([])
+  const getCodeList = async (filter?: any) => {
+    const { code, data } = await getAllCode(filter)
+    if (code == 10200) {
+      setCodeList(data)
+    }
+  }
+  useEffect(() => {
+    getCodeList()
+  }, [])
   return (
     <HomeWrapper>
       {' '}
       <div className="home-container">
-        {/* <Layout hasSider>
-          <Sider style={siderStyle} width={'25%'}>
+        <Layout hasSider>
+          <Content style={contentStyle}>
+            {codeList.map((item: any) => {
+              return (
+                <ItemCard
+                  key={item.id}
+                  title={item.name}
+                  description={item.description}
+                >
+                  <CodeBlock
+                    code={item.content}
+                    language={item.language}
+                    id={item.id}
+                  ></CodeBlock>
+                </ItemCard>
+              )
+            })}
+          </Content>
+          <Sider theme="light" style={siderStyle} width={'25%'}>
             Sider
           </Sider>
-          <Content style={contentStyle}></Content>
-        </Layout> */}
-        <ItemCard>
-          <CodeBlock
-            code={`var searchBST = function(root, val) {
-            if(!root) {
-              return null
-            }
-            // 当前节点等于目标值，返回节点
-            if(root.val == val) {
-              return root
-            }
-            // 大于目标值，向左搜索子树
-            if(root.val > val) {
-              return searchBST(root.left, val)
-            }
-            // 小于目标值，向右搜索子树
-            if(root.val < val) {
-              return searchBST(root.right, val)
-            }
-          };`}
-          ></CodeBlock>
-        </ItemCard>
+        </Layout>
 
         {/* 二级路由
         <Suspense fallback="">

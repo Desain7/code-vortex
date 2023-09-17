@@ -1,11 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { test } from '@/api/demo'
-import { message } from 'antd'
 import { getUserConfig } from '@/api/user'
 
 interface User {
   username: string
   email: string
+  id?: string
 }
 
 // 推荐模块的初始状态
