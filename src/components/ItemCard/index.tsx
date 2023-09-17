@@ -3,7 +3,7 @@ import type { FC, ReactNode } from 'react'
 import Card from 'antd/es/card/Card'
 import { CardWrapper } from './style'
 import { HeartOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons'
-import { Avatar } from 'antd'
+import { Avatar, Skeleton } from 'antd'
 import Meta from 'antd/es/card/Meta'
 
 interface IProps {
@@ -12,6 +12,7 @@ interface IProps {
   avatar?: string
   title: string
   description: string
+  loading?: boolean
 }
 
 const ItemCard: FC<IProps> = (props) => {
@@ -20,6 +21,7 @@ const ItemCard: FC<IProps> = (props) => {
       {' '}
       <Card
         style={{ width: props.width }}
+        loading={props.loading}
         actions={[
           <LikeOutlined key="like" />,
           <MessageOutlined key="comment" />,
@@ -34,6 +36,7 @@ const ItemCard: FC<IProps> = (props) => {
           description={props.description}
         />
         {props.children}
+        <Skeleton loading={props.loading} avatar active></Skeleton>
       </Card>
     </CardWrapper>
   )

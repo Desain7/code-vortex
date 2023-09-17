@@ -20,6 +20,7 @@ const systemSlice = createSlice({
     changeMessageAction(state, { payload }) {
       if (state.message.text == payload.text) {
         state.message.text = ''
+        state.message.text = payload.text
       } else {
         if (payload.type) {
           state.message.type = payload.type

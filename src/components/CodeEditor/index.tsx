@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useRef, useState } from 'react'
 import type { FC, ReactNode } from 'react'
-import { Card, Select } from 'antd'
+import { Alert, Card, Select } from 'antd'
 import { CloseOutlined } from '@ant-design/icons'
 import Draggable from 'react-draggable'
 // 引入
@@ -20,9 +20,10 @@ import { javascript } from '@codemirror/lang-javascript'
 import '@uiw/codemirror-theme-github'
 import { EditorWrapper } from './style'
 import { addCode } from '@/api/code'
-import { useAppSelector } from '@/store'
+import { useAppDispatch, useAppSelector } from '@/store'
 import { shallowEqual } from 'react-redux'
 import { FilterFunc } from 'rc-select/lib/Select'
+import { changeMessageAction } from '@/store/modules/system'
 interface IProps {
   children?: ReactNode
 }
@@ -51,6 +52,7 @@ const filterOption = ((
 }) as FilterFunc<{ value: string; label: string }>
 
 const CodeEditor: FC<IProps> = () => {
+  const dispatch = useAppDispatch()
   // 代码内容
   const [code, setCode] = useState('')
   // 输出内容
@@ -92,7 +94,9 @@ const CodeEditor: FC<IProps> = () => {
       name: 'test',
       user: userConfig.id as string
     })
-    console.log(res)
+    if (res.code == 10200) {
+      dispatch(changeMessageAction({ text: '发布成功', type: 'success' }))
+    }
   }
 
   /**
@@ -102,6 +106,7 @@ const CodeEditor: FC<IProps> = () => {
   const localCache = (code: string) => {
     localStorage.setItem('codeCache', code)
   }
+  const [visible, setVisible] = useState(false)
   /**
    * 获取本地缓存的代码
    */
@@ -109,6 +114,10 @@ const CodeEditor: FC<IProps> = () => {
     const code = localStorage.getItem('codeCache')
     if (code) {
       setCode(code)
+      setVisible(true)
+      setTimeout(() => {
+        setVisible(false)
+      }, 2000)
     }
   }
 
@@ -142,7 +151,7 @@ const CodeEditor: FC<IProps> = () => {
               />
             </div>,
             <div key={'save'} onClick={saveCode}>
-              保存
+              发布
             </div>,
             <div key={'run'} onClick={runCode}>
               运行
@@ -160,6 +169,10 @@ const CodeEditor: FC<IProps> = () => {
             extensions={[javascript({ jsx: true })]}
             onChange={onCodeChange}
           />
+          {visible && (
+            <Alert message="已恢复上一次编辑的代码" type="info" closable />
+          )}
+
           <div>{output}</div>
         </Card>
       </EditorWrapper>

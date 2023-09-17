@@ -15,6 +15,7 @@ import {
   ZoomOutOutlined
 } from '@ant-design/icons'
 import { FilterFunc } from 'rc-select/lib/Select'
+
 import { CodeBlockWrapper } from './style'
 
 interface IProps {
@@ -69,29 +70,6 @@ const CodeBlock: FC<IProps> = ({ code, language, width = '100%', id }) => {
 
   const [previewVisible, setPreviewVisible] = useState(false)
 
-  // 监听 language 内容的变化，更新 clipboard 实例
-  useEffect(() => {
-    if (preRef.current) {
-      hljs.highlightElement(preRef.current)
-
-      // 创建 clipboard 实例并保存到变量中
-      const clipboard = new Clipboard(`#${language}copy_btn`, {
-        text: () => code
-      })
-
-      // 监听复制成功事件
-      clipboard.on('success', () => {
-        setCopied(true)
-        setTimeout(() => setCopied(false), 2000)
-      })
-
-      // 销毁 clipboard 实例
-      return () => {
-        clipboard.destroy()
-      }
-    }
-  }, [language])
-
   // 动态加载主题样式文件
   useEffect(() => {
     const loadTheme = async () => {
@@ -103,11 +81,11 @@ const CodeBlock: FC<IProps> = ({ code, language, width = '100%', id }) => {
         // console.log(lastStyleTag.textContent)
         if (preLastStyleTag.textContent?.includes('code.hljs')) {
           preLastStyleTag.textContent = ''
-          console.log('removed!')
+          // console.log('removed!')
         }
         // 判断是否导入过该主题，若已导入则直接从 map 中拿取缓存的数据
         if (themeMap.has(theme)) {
-          console.log('have', themeMap.get(theme))
+          // console.log('have', themeMap.get(theme))
           preLastStyleTag.textContent = themeMap.get(theme)
         } else {
           // 使用动态导入加载样式文件
@@ -121,10 +99,10 @@ const CodeBlock: FC<IProps> = ({ code, language, width = '100%', id }) => {
         // 缓存导入的样式文件中的内容
         if (curLastStyleTag.textContent?.includes('code')) {
           themeMap.set(theme, curLastStyleTag.textContent)
-          console.log('con', curLastStyleTag.textContent)
+          // console.log('con', curLastStyleTag.textContent)
         }
 
-        console.log('theme loaded！', themeMap)
+        // console.log('theme loaded！', themeMap)
       } catch (error) {
         console.error(`Error loading theme '${theme}':`, error)
       }
@@ -174,8 +152,30 @@ const CodeBlock: FC<IProps> = ({ code, language, width = '100%', id }) => {
         link.remove()
       })
   }
-
+  const [copy, setCopy] = useState(false)
   const preRef = useRef(null)
+  useEffect(() => {
+    // console.log('pre', preRef.current)
+    if (preRef.current) {
+      hljs.highlightElement(preRef.current)
+      setCopy(true)
+      // 创建 clipboard 实例并保存到变量中
+      const clipboard = new Clipboard(`#${language}-${id}copy_btn`, {
+        text: () => code
+      })
+
+      // 监听复制成功事件
+      clipboard.on('success', () => {
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+      })
+
+      // 销毁 clipboard 实例
+      return () => {
+        clipboard.destroy()
+      }
+    }
+  }, [preRef.current])
   const [copied, setCopied] = useState(false)
 
   return (
@@ -278,11 +278,11 @@ const CodeBlock: FC<IProps> = ({ code, language, width = '100%', id }) => {
               />
               <div className="handle">
                 <Button
-                  id={`${language}copy_btn`}
+                  id={`${language}-${id}copy_btn`}
                   type="link"
                   className="code-block__button"
-                  data-clipboard-target={`${language}-${id}`}
-                  disabled={!preRef.current}
+                  data-clipboard-target={`#${language}-${id}`}
+                  disabled={!copy}
                 >
                   {copied ? '已复制' : '复制'}
                 </Button>

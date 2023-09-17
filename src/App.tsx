@@ -5,7 +5,7 @@ import Navigator from './components/Header/Navigator'
 // import Footer from './components/footer'
 import { useAppDispatch, useAppSelector } from './store'
 import { LoadingOutlined } from '@ant-design/icons'
-import { message } from 'antd'
+import { FloatButton, message } from 'antd'
 import { shallowEqual, useSelector } from 'react-redux'
 import { getToken } from './utils/userConfig'
 import { fetchUserConfigAction } from './store/modules/user'
@@ -51,6 +51,7 @@ function App() {
       >
         {/* 路由渲染的主要内容 */}
         <div className="main">{useRoutes(routes)}</div>
+        <FloatButton.BackTop />
       </Suspense>
       {/* <Footer></Footer> */}
     </div>

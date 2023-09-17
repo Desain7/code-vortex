@@ -30,10 +30,12 @@ const siderStyle: React.CSSProperties = {
 
 const Home: FC<IProps> = () => {
   const [codeList, setCodeList] = useState([])
+  const [loading, setLoading] = useState(true)
   const getCodeList = async (filter?: any) => {
     const { code, data } = await getAllCode(filter)
     if (code == 10200) {
       setCodeList(data)
+      setLoading(false)
     }
   }
   useEffect(() => {
@@ -45,12 +47,13 @@ const Home: FC<IProps> = () => {
       <div className="home-container">
         <Layout hasSider>
           <Content style={contentStyle}>
-            {codeList.map((item: any) => {
+            {codeList.slice(0, 2).map((item: any) => {
               return (
                 <ItemCard
                   key={item.id}
                   title={item.name}
                   description={item.description}
+                  loading={loading}
                 >
                   <CodeBlock
                     code={item.content}
