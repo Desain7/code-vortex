@@ -10,7 +10,7 @@ import {
   RocketOutlined,
   SendOutlined
 } from '@ant-design/icons'
-import { Drawer, FloatButton, message } from 'antd'
+import { Drawer, FloatButton, Tooltip, message } from 'antd'
 import { shallowEqual, useSelector } from 'react-redux'
 import { getToken } from './utils/userConfig'
 import { fetchUserConfigAction } from './store/modules/user'
@@ -87,7 +87,9 @@ function App() {
           style={{ right: 24 }}
           icon={<CodeOutlined />}
         >
-          <FloatButton icon={<SendOutlined />} onClick={openEditor} />
+          <Tooltip title="发布代码">
+            <FloatButton icon={<SendOutlined />} onClick={openEditor} />
+          </Tooltip>
           <FloatButton.BackTop icon={<RocketOutlined />} />
         </FloatButton.Group>
       </Suspense>
