@@ -27,7 +27,8 @@ async function addCode(req, code, name, language, user) {
     content: code,
     language,
     createTime: date.getTime(),
-    user_id: user,
+    updateTime: date.getTime(),
+    userId: user,
     used: 0,
     view: 0
   })

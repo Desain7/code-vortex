@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize')
 const sequelize = require('../db')
+const { stringify } = require('querystring')
 
 /**
  * 用户模型
@@ -32,6 +33,10 @@ const UserModel = sequelize.define(
     },
     updateTime: {
       type: DataTypes.DATE,
+      allowNull: true
+    },
+    avatar: {
+      type: DataTypes.STRING,
       allowNull: true
     }
   },

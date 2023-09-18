@@ -26,7 +26,7 @@ const CodeModel = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false
     },
-    user_id: {
+    userId: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
@@ -38,10 +38,10 @@ const CodeModel = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    update_time: {
+    updateTime: {
       type: DataTypes.DATE
     },
-    create_time: {
+    createTime: {
       type: DataTypes.DATE,
       allowNull: true
     }

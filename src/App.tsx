@@ -9,12 +9,14 @@ import { FloatButton, message } from 'antd'
 import { shallowEqual, useSelector } from 'react-redux'
 import { getToken } from './utils/userConfig'
 import { fetchUserConfigAction } from './store/modules/user'
+import CodeEditor from './components/CodeEditor'
 
 function App() {
   const dispatch = useAppDispatch()
-  const { getMessage } = useAppSelector(
+  const { getMessage, showEditor } = useAppSelector(
     (state) => ({
-      getMessage: state.system.message
+      getMessage: state.system.message,
+      showEditor: state.system.showEditor
     }),
     shallowEqual
   )
@@ -35,6 +37,8 @@ function App() {
   return (
     <div className="App">
       <Navigator></Navigator>
+      {/* 全局代码编辑器组件 */}
+      <CodeEditor show={showEditor}></CodeEditor>
       {/* 懒加载组件的包裹 */}
       <Suspense
         fallback={

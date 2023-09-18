@@ -2,7 +2,6 @@ import React, { memo, useEffect, useRef, useState } from 'react'
 import type { FC, ReactNode } from 'react'
 import { Alert, Card, Select } from 'antd'
 import { CloseOutlined } from '@ant-design/icons'
-import Draggable from 'react-draggable'
 // 引入
 import CodeMirror from '@uiw/react-codemirror'
 // 配置项
@@ -23,9 +22,15 @@ import { addCode } from '@/api/code'
 import { useAppDispatch, useAppSelector } from '@/store'
 import { shallowEqual } from 'react-redux'
 import { FilterFunc } from 'rc-select/lib/Select'
-import { changeMessageAction } from '@/store/modules/system'
+import {
+  changeEditCode,
+  changeEditorDisplayAction,
+  changeMessageAction
+} from '@/store/modules/system'
 interface IProps {
   children?: ReactNode
+  show: boolean
+  editCode?: string
 }
 
 /**
@@ -51,7 +56,13 @@ const filterOption = ((
   return (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
 }) as FilterFunc<{ value: string; label: string }>
 
-const CodeEditor: FC<IProps> = () => {
+const CodeEditor: FC<IProps> = ({ show }) => {
+  const { editCode } = useAppSelector(
+    (state) => ({
+      editCode: state.system.editCode
+    }),
+    shallowEqual
+  )
   const dispatch = useAppDispatch()
   // 代码内容
   const [code, setCode] = useState('')
@@ -63,6 +74,15 @@ const CodeEditor: FC<IProps> = () => {
     setLanguage(value)
   }
 
+  // 当要对代码进行编辑时，改变 code
+  useEffect(() => {
+    setCode(editCode)
+  }, [editCode])
+  // 关闭编辑器
+  const closeEditor = () => {
+    dispatch(changeEditorDisplayAction(false))
+    dispatch(changeEditCode(''))
+  }
   /**
    * 运行代码
    */
@@ -132,51 +152,57 @@ const CodeEditor: FC<IProps> = () => {
     localCache(value)
   }, [])
   return (
-    <Draggable handle=".ant-card-head">
-      <EditorWrapper>
-        <Card
-          title="代码编辑"
-          bordered={true}
-          style={{ width: 500, padding: '0', cursor: 'text' }}
-          actions={[
-            <div key={'lang'}>
-              {' '}
-              <Select
-                value={language}
-                showSearch
-                style={{ width: 120 }}
-                options={languageOpts}
-                onChange={(value) => onLangChange(value)}
-                filterOption={filterOption}
-              />
-            </div>,
-            <div key={'save'} onClick={saveCode}>
-              发布
-            </div>,
-            <div key={'run'} onClick={runCode}>
-              运行
-            </div>
-          ]}
-          extra={
-            <CloseOutlined
-              style={{ fontSize: '100%', color: '#9a9a9a', cursor: 'pointer' }}
+    <EditorWrapper>
+      <Card
+        title="代码编辑"
+        bordered={true}
+        style={{
+          width: 500,
+          padding: '0',
+          cursor: 'text',
+          display: show ? 'block' : 'none',
+          position: 'fixed',
+          zIndex: '9999'
+        }}
+        actions={[
+          <div key={'lang'}>
+            {' '}
+            <Select
+              value={language}
+              showSearch
+              style={{ width: 120 }}
+              options={languageOpts}
+              onChange={(value) => onLangChange(value)}
+              filterOption={filterOption}
             />
-          }
-        >
-          <CodeMirror
-            value={code}
-            height="200px"
-            extensions={[javascript({ jsx: true })]}
-            onChange={onCodeChange}
+          </div>,
+          <div key={'save'} onClick={saveCode}>
+            {editCode ? '保存' : '发布'}
+          </div>
+          // <div key={'run'} onClick={runCode}>
+          //   运行
+          // </div>
+        ]}
+        extra={
+          <CloseOutlined
+            style={{ fontSize: '100%', color: '#9a9a9a', cursor: 'pointer' }}
+            onClick={closeEditor}
           />
-          {visible && (
-            <Alert message="已恢复上一次编辑的代码" type="info" closable />
-          )}
+        }
+      >
+        <CodeMirror
+          value={code}
+          height="200px"
+          extensions={[javascript({ jsx: true })]}
+          onChange={onCodeChange}
+        />
+        {visible && (
+          <Alert message="已恢复上一次编辑的代码" type="info" closable />
+        )}
 
-          <div>{output}</div>
-        </Card>
-      </EditorWrapper>
-    </Draggable>
+        <div>{output}</div>
+      </Card>
+    </EditorWrapper>
   )
 }
 

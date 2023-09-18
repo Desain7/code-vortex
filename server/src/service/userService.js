@@ -49,7 +49,8 @@ async function userRegister(username, password, email) {
     username,
     password: cryptoPassword,
     email,
-    createTime: date.getTime()
+    createTime: date.getTime(),
+    updateTime: date.getTime()
   })
   return user.id
 }

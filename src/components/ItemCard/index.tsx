@@ -20,7 +20,7 @@ const ItemCard: FC<IProps> = (props) => {
     <CardWrapper>
       {' '}
       <Card
-        style={{ width: props.width }}
+        style={{ width: props.width, zIndex: 10 }}
         loading={props.loading}
         actions={[
           <LikeOutlined key="like" />,
@@ -29,9 +29,7 @@ const ItemCard: FC<IProps> = (props) => {
         ]}
       >
         <Meta
-          avatar={
-            <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" />
-          }
+          avatar={<Avatar src="http://oss.desain7.top/pic94500053.jpg" />}
           title={props.title}
           description={props.description}
         />

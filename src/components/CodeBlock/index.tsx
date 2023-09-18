@@ -7,6 +7,7 @@ import Clipboard from 'clipboard'
 import { Button, Card, Select, Image, Space } from 'antd'
 import {
   DownloadOutlined,
+  EditOutlined,
   PictureOutlined,
   RotateLeftOutlined,
   RotateRightOutlined,
@@ -17,6 +18,11 @@ import {
 import { FilterFunc } from 'rc-select/lib/Select'
 
 import { CodeBlockWrapper } from './style'
+import { useAppDispatch } from '@/store'
+import {
+  changeEditCode,
+  changeEditorDisplayAction
+} from '@/store/modules/system'
 
 interface IProps {
   children?: ReactNode
@@ -62,6 +68,14 @@ const codeOpts = {
   ]
 }
 
+// Select 组件的过滤器
+const filterOption = ((
+  input: string,
+  option: { label: string; value: string }
+) => {
+  return (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+}) as FilterFunc<{ value: string; label: string }>
+
 // 缓存已加载过的主题
 const themeMap = new Map()
 
@@ -72,6 +86,7 @@ const CodeBlock: FC<IProps> = ({
   id,
   name
 }) => {
+  const dispatch = useAppDispatch()
   const [theme, setTheme] = useState('github')
   const [imgUrl, setImgUrl] = useState('')
 
@@ -118,14 +133,6 @@ const CodeBlock: FC<IProps> = ({
     loadTheme()
   }, [theme])
 
-  // Select 组件的过滤器
-  const filterOption = ((
-    input: string,
-    option: { label: string; value: string }
-  ) => {
-    return (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-  }) as FilterFunc<{ value: string; label: string }>
-
   // 将代码块转换为图片
   const handleConvertToImage = () => {
     const codeContainer = document.querySelector(
@@ -159,6 +166,12 @@ const CodeBlock: FC<IProps> = ({
         link.remove()
       })
   }
+  // 编辑代码
+  const handleEdit = () => {
+    dispatch(changeEditorDisplayAction(true))
+    dispatch(changeEditCode({ editCode: code }))
+  }
+  // 对代码进行复制
   const [copy, setCopy] = useState(false)
   const preRef = useRef(null)
   useEffect(() => {
@@ -297,6 +310,11 @@ const CodeBlock: FC<IProps> = ({
                   type="link"
                   icon={<PictureOutlined />}
                   onClick={handleConvertToImage}
+                ></Button>
+                <Button
+                  type="link"
+                  icon={<EditOutlined />}
+                  onClick={handleEdit}
                 ></Button>
               </div>
             </div>

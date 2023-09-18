@@ -6,10 +6,14 @@ interface Message {
 }
 interface ISystemState {
   message: Message
+  showEditor: boolean
+  editCode: string
 }
 
 const initialState: ISystemState = {
-  message: { text: '', type: 'error' }
+  message: { text: '', type: 'error' },
+  showEditor: false,
+  editCode: ''
 }
 
 const systemSlice = createSlice({
@@ -30,11 +34,21 @@ const systemSlice = createSlice({
           state.message.text = payload.text
         }
       }
+    },
+    changeEditorDisplayAction(state, { payload }) {
+      state.showEditor = payload
+    },
+    changeEditCode(state, { payload }) {
+      state.editCode = payload.editCode
     }
   }
 })
 
 // 导出同步action
-export const { changeMessageAction } = systemSlice.actions
+export const {
+  changeMessageAction,
+  changeEditorDisplayAction,
+  changeEditCode
+} = systemSlice.actions
 
 export default systemSlice.reducer

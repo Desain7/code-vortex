@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom'
 import CodeEditor from '@/components/CodeEditor'
 import { HomeWrapper } from './style'
 import ItemCard from '@/components/ItemCard'
-import { Layout } from 'antd'
+import { Layout, Pagination } from 'antd'
 import Sider from 'antd/es/layout/Sider'
 import { Content } from 'antd/es/layout/layout'
 import CodeBlock from '@/components/CodeBlock'
@@ -19,7 +19,10 @@ const contentStyle: React.CSSProperties = {
   lineHeight: '120px',
   color: '#fff',
   // backgroundColor: '#108ee9',
-  padding: '2%'
+  padding: '2%',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center'
 }
 
 const siderStyle: React.CSSProperties = {
@@ -64,6 +67,11 @@ const Home: FC<IProps> = () => {
                 </ItemCard>
               )
             })}
+            <Pagination
+              style={{ display: loading ? 'none' : 'block' }}
+              defaultCurrent={1}
+              total={50}
+            />
           </Content>
           <Sider theme="light" style={siderStyle} width={'25%'}>
             Sider
