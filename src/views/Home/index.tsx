@@ -47,7 +47,7 @@ const Home: FC<IProps> = () => {
       <div className="home-container">
         <Layout hasSider>
           <Content style={contentStyle}>
-            {codeList.slice(0, 2).map((item: any) => {
+            {codeList.map((item: any) => {
               return (
                 <ItemCard
                   key={item.id}
@@ -56,6 +56,7 @@ const Home: FC<IProps> = () => {
                   loading={loading}
                 >
                   <CodeBlock
+                    name={item.name}
                     code={item.content}
                     language={item.language}
                     id={item.id}

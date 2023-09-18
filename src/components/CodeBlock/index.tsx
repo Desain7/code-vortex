@@ -24,6 +24,7 @@ interface IProps {
   language: string
   id: string // 代码id
   width?: number
+  name: string
 }
 
 /**
@@ -64,7 +65,13 @@ const codeOpts = {
 // 缓存已加载过的主题
 const themeMap = new Map()
 
-const CodeBlock: FC<IProps> = ({ code, language, width = '100%', id }) => {
+const CodeBlock: FC<IProps> = ({
+  code,
+  language,
+  width = '100%',
+  id,
+  name
+}) => {
   const [theme, setTheme] = useState('github')
   const [imgUrl, setImgUrl] = useState('')
 
@@ -145,7 +152,7 @@ const CodeBlock: FC<IProps> = ({ code, language, width = '100%', id }) => {
         const url = URL.createObjectURL(new Blob([blob]))
         const link = document.createElement('a')
         link.href = url
-        link.download = 'image.png'
+        link.download = `${name}(${language}).png`
         document.body.appendChild(link)
         link.click()
         URL.revokeObjectURL(url)
