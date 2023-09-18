@@ -78,11 +78,6 @@ const CodeEditor: FC<IProps> = ({ show }) => {
   useEffect(() => {
     setCode(editCode)
   }, [editCode])
-  // 关闭编辑器
-  const closeEditor = () => {
-    dispatch(changeEditorDisplayAction(false))
-    dispatch(changeEditCode(''))
-  }
   /**
    * 运行代码
    */
@@ -107,7 +102,7 @@ const CodeEditor: FC<IProps> = ({ show }) => {
   /**
    * 新增代码片段
    */
-  const saveCode = async () => {
+  const addUserCode = async () => {
     const res = await addCode({
       code,
       language,
@@ -116,6 +111,21 @@ const CodeEditor: FC<IProps> = ({ show }) => {
     })
     if (res.code == 10200) {
       dispatch(changeMessageAction({ text: '发布成功', type: 'success' }))
+      setCode('')
+    }
+  }
+  /**
+   * 保存代码片段
+   */
+  const saveUserCode = async () => {
+    const res = await addCode({
+      code,
+      language,
+      name: 'test',
+      user: userConfig.id as string
+    })
+    if (res.code == 10200) {
+      dispatch(changeMessageAction({ text: '保存成功', type: 'success' }))
     }
   }
 
@@ -154,15 +164,11 @@ const CodeEditor: FC<IProps> = ({ show }) => {
   return (
     <EditorWrapper>
       <Card
-        title="代码编辑"
-        bordered={true}
+        bordered={false}
         style={{
-          width: 500,
           padding: '0',
           cursor: 'text',
-          display: show ? 'block' : 'none',
-          position: 'fixed',
-          zIndex: '9999'
+          display: show ? 'block' : 'none'
         }}
         actions={[
           <div key={'lang'}>
@@ -176,23 +182,17 @@ const CodeEditor: FC<IProps> = ({ show }) => {
               filterOption={filterOption}
             />
           </div>,
-          <div key={'save'} onClick={saveCode}>
+          <div key={'save'} onClick={editCode ? saveUserCode : addUserCode}>
             {editCode ? '保存' : '发布'}
           </div>
           // <div key={'run'} onClick={runCode}>
           //   运行
           // </div>
         ]}
-        extra={
-          <CloseOutlined
-            style={{ fontSize: '100%', color: '#9a9a9a', cursor: 'pointer' }}
-            onClick={closeEditor}
-          />
-        }
       >
         <CodeMirror
           value={code}
-          height="200px"
+          height="75vh"
           extensions={[javascript({ jsx: true })]}
           onChange={onCodeChange}
         />

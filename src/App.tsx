@@ -4,12 +4,21 @@ import routes from './router'
 import Navigator from './components/Header/Navigator'
 // import Footer from './components/footer'
 import { useAppDispatch, useAppSelector } from './store'
-import { LoadingOutlined } from '@ant-design/icons'
-import { FloatButton, message } from 'antd'
+import {
+  CodeOutlined,
+  LoadingOutlined,
+  RocketOutlined,
+  SendOutlined
+} from '@ant-design/icons'
+import { Drawer, FloatButton, message } from 'antd'
 import { shallowEqual, useSelector } from 'react-redux'
 import { getToken } from './utils/userConfig'
 import { fetchUserConfigAction } from './store/modules/user'
 import CodeEditor from './components/CodeEditor'
+import {
+  changeEditorDisplayAction,
+  changeEditCode
+} from './store/modules/system'
 
 function App() {
   const dispatch = useAppDispatch()
@@ -33,12 +42,29 @@ function App() {
   useEffect(() => {
     dispatch(fetchUserConfigAction())
   }, [])
+  // 关闭编辑器
+  const closeEditor = () => {
+    dispatch(changeEditorDisplayAction(false))
+    dispatch(changeEditCode(''))
+  }
+
+  const openEditor = () => {
+    dispatch(changeEditorDisplayAction(true))
+  }
 
   return (
     <div className="App">
       <Navigator></Navigator>
       {/* 全局代码编辑器组件 */}
-      <CodeEditor show={showEditor}></CodeEditor>
+      <Drawer
+        title="代码编辑"
+        placement="right"
+        size="large"
+        onClose={closeEditor}
+        open={showEditor}
+      >
+        <CodeEditor show={showEditor}></CodeEditor>
+      </Drawer>
       {/* 懒加载组件的包裹 */}
       <Suspense
         fallback={
@@ -55,7 +81,15 @@ function App() {
       >
         {/* 路由渲染的主要内容 */}
         <div className="main">{useRoutes(routes)}</div>
-        <FloatButton.BackTop />
+        <FloatButton.Group
+          trigger="click"
+          type="primary"
+          style={{ right: 24 }}
+          icon={<CodeOutlined />}
+        >
+          <FloatButton icon={<SendOutlined />} onClick={openEditor} />
+          <FloatButton.BackTop icon={<RocketOutlined />} />
+        </FloatButton.Group>
       </Suspense>
       {/* <Footer></Footer> */}
     </div>
